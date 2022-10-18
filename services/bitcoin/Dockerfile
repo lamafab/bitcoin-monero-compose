@@ -15,4 +15,4 @@ RUN wget ${LINK} -O bitcoin.tar.gz
 RUN sha256sum -c checksums.txt
 RUN mkdir bitcoin && tar xvzf bitcoin.tar.gz -C bitcoin --strip-components=1
 
-ENTRYPOINT ["bitcoin/bin/bitcoind"]
+ENTRYPOINT ["bitcoin/bin/bitcoind", "-datadir=/data"]

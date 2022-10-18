@@ -9,16 +9,16 @@ services:
       # RPC port
       - 8332:8332
     volumes:
-      - /data:/mounts/bitcoin
-  lightning:
-    build: ./services/lightning
-    ports:
-      - 8735:9735
-    volumes:
-      - /data:/mounts/lightning
-  monero:
-    build: ./services/monero
-    ports:
-      - 18080:18080
-    volumes:
-      - /data:/mounts/monero
+      - ./mounts/bitcoin:/data
+#  lightning:
+#    build: ./services/lightning
+#    ports:
+#      - 8735:9735
+#    volumes:
+#      - /data:/mounts/lightning
+#  monero:
+#    build: ./services/monero
+#    ports:
+#      - 18080:18080
+#    volumes:
+#      - /data:/mounts/monero
