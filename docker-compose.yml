@@ -1,0 +1,14 @@
+version: "3.9"
+
+services: 
+  bitcoin:
+    build: ./services/bitcoin
+    volumes: v-bitcoin
+  lightning:
+    build: ./services/lightning
+    volumes: v-lightning
+  monero:
+    build: ./services/monero
+    volumes: v-monero
+
+volumes:
