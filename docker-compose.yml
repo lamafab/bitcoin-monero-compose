@@ -3,12 +3,22 @@ version: "3.9"
 services: 
   bitcoin:
     build: ./services/bitcoin
-    volumes: v-bitcoin
+    ports:
+      # P2P port
+      - 8333:8333
+      # RPC port
+      - 8332:8332
+    volumes:
+      - /data:/mounts/bitcoin
   lightning:
     build: ./services/lightning
-    volumes: v-lightning
+    ports:
+      - 8735:9735
+    volumes:
+      - /data:/mounts/lightning
   monero:
     build: ./services/monero
-    volumes: v-monero
-
-volumes:
+    ports:
+      - 18080:18080
+    volumes:
+      - /data:/mounts/monero
