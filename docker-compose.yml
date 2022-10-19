@@ -10,15 +10,23 @@ services:
       - 8332:8332
     volumes:
       - ./mounts/bitcoin:/data
+    profiles: ["bitcoin"]
 #  lightning:
 #    build: ./services/lightning
 #    ports:
 #      - 8735:9735
 #    volumes:
 #      - /data:/mounts/lightning
+#    profiles: ["lightning"]
   monero:
     build: ./services/monero
     ports:
       - 18080:18080
     volumes:
       - ./mounts/monero:/data
+    profiles: ["monero"]
+  wireguard:
+    build: ./services/wireguard-server
+    volumes:
+      - ./mounts/wireguard-server:/etc/wireguard
+    profiles: ["wireguard", "vpn-proxy"]
