@@ -16,9 +16,9 @@ services:
 #      - 8735:9735
 #    volumes:
 #      - /data:/mounts/lightning
-#  monero:
-#    build: ./services/monero
-#    ports:
-#      - 18080:18080
-#    volumes:
-#      - /data:/mounts/monero
+  monero:
+    build: ./services/monero
+    ports:
+      - 18080:18080
+    volumes:
+      - ./mounts/monero:/data
