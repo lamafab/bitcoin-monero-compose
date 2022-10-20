@@ -1,13 +1,8 @@
 version: "3.9"
 
-services: 
+services:
   bitcoin:
     build: ./services/bitcoin
-    ports:
-      # P2P port
-      - 8333:8333
-      # RPC port
-      - 8332:8332
     volumes:
       - ./mounts/bitcoin:/data
     profiles: ["bitcoin"]
@@ -20,13 +15,6 @@ services:
 #    profiles: ["lightning"]
   monero:
     build: ./services/monero
-    ports:
-      - 18080:18080
     volumes:
       - ./mounts/monero:/data
     profiles: ["monero"]
-  wireguard:
-    build: ./services/wireguard-server
-    volumes:
-      - ./mounts/wireguard-server:/etc/wireguard
-    profiles: ["wireguard", "vpn-proxy"]
