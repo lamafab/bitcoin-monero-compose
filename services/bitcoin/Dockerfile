@@ -9,12 +9,11 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
     ca-certificates wget
 
-RUN update-ca-certificates
+RUN adduser bitcoin
+USER bitcoin
 
-COPY checksum.txt .
+COPY . .
 
-RUN wget ${LINK} -O bitcoin.tar.gz
-RUN sha256sum -c checksum.txt
-RUN mkdir bitcoin && tar xvzf bitcoin.tar.gz -C bitcoin --strip-components=1
+RUN bash setup.sh
 
 ENTRYPOINT ["bitcoin/bin/bitcoind", "-datadir=/data"]

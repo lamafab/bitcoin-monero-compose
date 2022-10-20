@@ -5,14 +5,20 @@ services:
     build: ./services/bitcoin
     volumes:
       - ./mounts/bitcoin:/data
+    environment:
+      INSTALL_VPN: "true"
     profiles: ["bitcoin"]
 #  lightning:
 #    build: ./services/lightning
 #    volumes:
 #      - /data:/mounts/lightning
+#    environment:
+#      INSTALL_VPN: "true"
 #    profiles: ["lightning"]
   monero:
     build: ./services/monero
     volumes:
       - ./mounts/monero:/data
+    environment:
+      INSTALL_VPN: "true"
     profiles: ["monero"]
