@@ -8,8 +8,6 @@ services:
     profiles: ["bitcoin"]
 #  lightning:
 #    build: ./services/lightning
-#    ports:
-#      - 8735:9735
 #    volumes:
 #      - /data:/mounts/lightning
 #    profiles: ["lightning"]
