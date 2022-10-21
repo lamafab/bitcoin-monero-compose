@@ -1,9 +1,5 @@
 if "${INSTALL_VPN}" == "true"; then
-	apt-get install -y wireguard
-	SEC_KEY=$(wg genkey)
-	PUB_KEY=$(echo $SEC_KEY | wg pubkey)
-
-	sed -i 's/<BITCOIN_SECKEY>/${SEC_KEY}/g' wireguard.conf
+	# TODO
 fi
 
 update-ca-certificates

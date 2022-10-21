@@ -1,37 +1,33 @@
-# Set permissions of created files for root-only
-#umask 300
-umask 000
+# Set permissions of created files for root-only.
+umask 077
 
 gen_keys () {
-	if [[ -f /data/$1 ]]; then
-		SECKEY=$(cat "/data/$1")
-		PUBKEY=$(echo $SECKEY | wg pubkey)
-		echo $SECKEY $PUBKEY
+	if [ ! -e /data/wg_${1}_client.conf ]; then
+		echo "GENERATING new keypair for ${1}"
+		SEC_KEY=$(wg genkey) && PUB_KEY=$(echo $SEC_KEY | wg pubkey)
+
+		# Update client
+		cp client.conf wg_${1}_client.conf
+		sed -i "s|<CLIENT_SECKEY>|'$SEC_KEY'|" wg_${1}_client.conf
+		sed -i "s|<IP_ADDRESS>|$2|" wg_${1}_client.conf
+
+		# Update server config
+		sed -i "s|<${1^^}_PUBKEY>|'$PUB_KEY'|" wg_vpn_server.conf
 	else
-		SECKEY=$(wg genkey)
-		PUBKEY=$(echo $SECKEY | wg pubkey)
-		echo $SECKEY $PUBKEY
+		echo "FOUND existing wg_${1}_client.conf, skipping..."
 	fi
 }
 
-cp wireguard.conf wg0.conf
+cp wireguard_server.conf wg_vpn_server.conf
+cp wireguard_client.conf client.conf
 
-read SERVER_SECKEY SERVER_PUBKEY < <(gen_keys "vpn-server_private.key")
+VPN_SK=$(wg genkey) && VPN_PK=$(echo $VPN_SK | wg pubkey)
 
-read BITCOIN_SECKEY BITCOIN_PUBKEY < <(gen_keys "bitcoin_private.key")
+sed -i "s|<VPN_SERVER_SECKEY>|'$VPN_SK'|" wg_vpn_server.conf
+sed -i "s|<VPN_SERVER_PUBKEY>|'$VPN_PK'|" client.conf
 
-read LIGHTNING_SECKEY LIGHTNING_PUBKEY < <(gen_keys "lightning_private.key")
+gen_keys "bitcoin"	10.1.0.2
+gen_keys "lightning" 10.2.0.2
+gen_keys "monero" 10.3.0.2
 
-read MONERO_SECKEY MONERO_PUBKEY < <(gen_keys "monero_private.key")
-
-sed -i "s|<VPN_SERVER_SECKEY>|'$SERVER_SECKEY'|" wg0.conf
-sed -i "s|<BITCOIN_PUBKEY>|'$BITCOIN_PUBKEY'|" wg0.conf
-sed -i "s|<LIGHTNING_PUBKEY>|'$LIGHTNING_PUBKEY'|" wg0.conf
-sed -i "s|<MONERO_PUBKEY>|'$MONERO_PUBKEY'|" wg0.conf
-
-cp wg0.conf /data
-
-echo $SERVER_PUBKEY > /data/vpn-server_public.key
-echo $BITCOIN_SECKEY > /data/bitcoin_private.key
-echo $LIGHTNING_SECKEY > /data/lightning_private.key
-echo $MONERO_SECKEY > /data/monero_private.key
+cp wg_* /data
