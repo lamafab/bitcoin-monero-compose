@@ -31,7 +31,6 @@ sed -i "s|<MONERO_PUBKEY>|'$MONERO_PUBKEY'|" wg0.conf
 
 cp wg0.conf /data
 
-echo $SERVER_SECKEY > /data/vpn-server_private.key
 echo $SERVER_PUBKEY > /data/vpn-server_public.key
 echo $BITCOIN_SECKEY > /data/bitcoin_private.key
 echo $LIGHTNING_SECKEY > /data/lightning_private.key
