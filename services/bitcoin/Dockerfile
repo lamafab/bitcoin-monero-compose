@@ -1,4 +1,5 @@
 FROM ubuntu:22.04
+WORKDIR /app
 
 # LINK specifies where to download the binary from. If you adjust this, remember
 # to update `checksum.txt` (the downloaded package is automatically renamed to
@@ -16,4 +17,4 @@ COPY . .
 
 RUN bash setup.sh
 
-ENTRYPOINT ["bitcoin/bin/bitcoind", "-datadir=/data"]
+ENTRYPOINT ["opt/bitcoin/bin/bitcoind", "-datadir=/data"]
