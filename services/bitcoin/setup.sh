@@ -1,6 +1,5 @@
 if "${INSTALL_VPN}" == "true"; then
-	# TODO
-	apt-get install -y wireguard iproute2
+	echo "GOT HERE"
 fi
 
 #update-ca-certificates

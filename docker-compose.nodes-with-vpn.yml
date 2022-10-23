@@ -1,37 +1,44 @@
 version: "3.9"
 
 services:
-  gen-vpn-config:
-    build: ./services/_gen-vpn-config
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
     volumes:
-      - ./mounts/_vpn-config:/data
+      - ./mounts/wireguard:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
   bitcoin:
     build: ./services/bitcoin
     depends_on:
-      gen-vpn-config:
-        condition: service_completed_successfully
+      - wireguard
+    environment:
+      - INSTALL_VPN="true"
     volumes:
       - ./mounts/bitcoin:/data
-      - ./mounts/_vpn-config:/vpn_config
-    cap_add:
-      - NET_ADMIN
-    environment:
-      INSTALL_VPN: "true"
     profiles: ["bitcoin"]
 #  lightning:
 #    build: ./services/lightning
+#    depends_on:
+#      - wireguard
 #    volumes:
 #      - /data:/mounts/lightning
-#    environment:
-#      INSTALL_VPN: "true"
 #    profiles: ["lightning"]
   monero:
     build: ./services/monero
     depends_on:
-      gen-vpn-config:
-        condition: service_completed_successfully
+      - wireguard
     volumes:
       - ./mounts/monero:/data
-    environment:
-      INSTALL_VPN: "true"
     profiles: ["monero"]

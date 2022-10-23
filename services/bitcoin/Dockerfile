@@ -13,4 +13,5 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 COPY . .
 
 RUN bash setup.sh
-CMD bash run.sh
+
+CMD opt/bitcoin/bin/bitcoind -datadir=/data
