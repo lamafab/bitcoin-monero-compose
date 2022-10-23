@@ -10,7 +10,17 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
     ca-certificates wget
 
+RUN update-ca-certificates
+
 COPY . .
 
-RUN bash setup.sh
+# Download and verify bitcoin package
+RUN wget ${LINK} -O bitcoin.tar.gz
+RUN sha256sum -c checksum.txt
+RUN mkdir bitcoin
+RUN tar xvzf bitcoin.tar.gz -C bitcoin --strip-components=1
+
+# Add bitcoin user
+RUN adduser --disabled-password --gecos "" bitcoin
+
 CMD bash run.sh

@@ -1,7 +1,5 @@
 chown -R bitcoin:bitcoin /data
 
-su bitcoin
-
 # TODO: setup DNS over VPN
 if "${INSTALL_VPN}" == "true"; then
 	echo ">> VPN enabled, setting up routes..."
@@ -15,6 +13,9 @@ if "${INSTALL_VPN}" == "true"; then
 
 	echo ">> IP ADDRESS:"
 	ip addr
+
+	echo "I AM"
+	whoami
 fi
 
 /app/bitcoin/bin/bitcoind -datadir=/data
