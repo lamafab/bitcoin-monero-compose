@@ -11,6 +11,9 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
+    networks:
+      wgnet:
+        ipv4_address: 10.0.0.1
     volumes:
       - ./mounts/wireguard:/config
       - /lib/modules:/lib/modules
@@ -19,12 +22,18 @@ services:
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
+    profiles: ["vpn"]
   bitcoin:
     build: ./services/bitcoin
     depends_on:
       - wireguard
+    cap_add:
+      - NET_ADMIN
     environment:
-      - INSTALL_VPN="true"
+      - INSTALL_VPN=true
+    networks:
+      wgnet:
+        ipv4_address: 10.0.0.2
     volumes:
       - ./mounts/bitcoin:/data
     profiles: ["bitcoin"]
@@ -32,6 +41,9 @@ services:
 #    build: ./services/lightning
 #    depends_on:
 #      - wireguard
+#    networks:
+#      wgnet:
+#        ipv4_address: 10.0.0.4
 #    volumes:
 #      - /data:/mounts/lightning
 #    profiles: ["lightning"]
@@ -39,6 +51,16 @@ services:
     build: ./services/monero
     depends_on:
       - wireguard
+    networks:
+      wgnet:
+        ipv4_address: 10.0.0.4
     volumes:
       - ./mounts/monero:/data
     profiles: ["monero"]
+
+networks:
+  wgnet:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.0/24
