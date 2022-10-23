@@ -1,16 +1,3 @@
-if "${INSTALL_VPN}" == "true"; then
-	echo ">> VPN enabled, setting up routes..."
-	apt install -y iproute2
-	ip route del default
-	ip route add default via 10.66.0.1
-fi
-
-echo ">> IP ROUTE:"
-ip route show
-
-echo ">> IP ADDRESS:"
-ip addr
-
 update-ca-certificates
 
 # Download and verify bitcoin package

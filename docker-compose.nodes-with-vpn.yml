@@ -13,7 +13,7 @@ services:
       - TZ=Europe/London
     networks:
       wgnet:
-        ipv4_address: 10.66.0.1
+        ipv4_address: 10.66.0.50
     volumes:
       - ./mounts/wireguard:/config
       - /lib/modules:/lib/modules
