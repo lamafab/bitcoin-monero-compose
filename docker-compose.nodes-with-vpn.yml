@@ -12,6 +12,9 @@ services:
         condition: service_completed_successfully
     volumes:
       - ./mounts/bitcoin:/data
+      - ./mounts/_vpn-config:/vpn_config
+    cap_add:
+      - NET_ADMIN
     environment:
       INSTALL_VPN: "true"
     profiles: ["bitcoin"]

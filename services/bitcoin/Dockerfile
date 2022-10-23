@@ -10,11 +10,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
     ca-certificates wget
 
-RUN adduser bitcoin
-USER bitcoin
-
 COPY . .
 
 RUN bash setup.sh
-
-ENTRYPOINT ["opt/bitcoin/bin/bitcoind", "-datadir=/data"]
+CMD bash run.sh

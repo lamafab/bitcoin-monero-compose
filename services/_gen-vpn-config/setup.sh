@@ -9,11 +9,11 @@ gen_keys () {
 
 		# Update client
 		cp client.conf wg_${1}_client.conf
-		sed -i "s|<CLIENT_SECKEY>|'$SEC_KEY'|" wg_${1}_client.conf
-		sed -i "s|<IP_ADDRESS>|$2|" wg_${1}_client.conf
+		sed -i "s|<CLIENT_SECKEY>|$SEC_KEY|" wg_${1}_client.conf
+		sed -i "s|<CLIENT_IP>|$2|" wg_${1}_client.conf
 
 		# Update server config
-		sed -i "s|<${1^^}_PUBKEY>|'$PUB_KEY'|" wg_vpn_server.conf
+		sed -i "s|<${1^^}_PUBKEY>|$PUB_KEY|" wg_vpn_server.conf
 	# ... otherwise skip.
 	else
 		echo "FOUND existing wg_${1}_client.conf, skipping..."
@@ -28,8 +28,8 @@ if [ ! -e /data/wg_vpn_server.conf ]; then
 	echo "GENERATING new VPN server keypair"
 	VPN_SK=$(wg genkey) && VPN_PK=$(echo $VPN_SK | wg pubkey)
 
-	sed -i "s|<VPN_SERVER_SECKEY>|'$VPN_SK'|" wg_vpn_server.conf
-	sed -i "s|<VPN_SERVER_PUBKEY>|'$VPN_PK'|" client.conf
+	sed -i "s|<VPN_SERVER_SECKEY>|$VPN_SK|" wg_vpn_server.conf
+	sed -i "s|<VPN_SERVER_PUBKEY>|$VPN_PK|" client.conf
 else
 	echo "FOUND existing VPN server config, skipping..."
 fi
