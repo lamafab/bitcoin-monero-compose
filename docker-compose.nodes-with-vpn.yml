@@ -1,12 +1,15 @@
 version: "3.9"
 
 services:
-  gen_vpn-keys:
+  gen-vpn-keys:
     build: ./services/_gen-vpn-keys
     volumes:
       - ./mounts/_vpn-keys:/data
   bitcoin:
     build: ./services/bitcoin
+    depends_on:
+      gen-vpn-keys:
+        condition: service_completed_successfully
     volumes:
       - ./mounts/bitcoin:/data
     environment:
@@ -21,6 +24,9 @@ services:
 #    profiles: ["lightning"]
   monero:
     build: ./services/monero
+    depends_on:
+      gen-vpn-keys:
+        condition: service_completed_successfully
     volumes:
       - ./mounts/monero:/data
     environment:
