@@ -34,4 +34,4 @@ fi
 echo -e "\n## About to start service ..."
 sleep 5
 
-/app/bitcoin/bin/bitcoind -datadir=${DATA_DIR} -port=${P2P_PORT} ${CLI_ARGS}
+/app/bitcoin/bin/bitcoind ${CLI_ARGS}
