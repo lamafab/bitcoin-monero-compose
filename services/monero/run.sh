@@ -17,7 +17,7 @@ echo '
 if "${INSTALL_VPN}" == "true"; then
 	echo -e "\n## VPN enabled, setting up routes..."
 	ip route del default
-	ip route add default via 10.50.0.10
+	ip route add default via ${GATEWAY}
 
 	echo -e "\n## IP ROUTE:"
 	ip route show
