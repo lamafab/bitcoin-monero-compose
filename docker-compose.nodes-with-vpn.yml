@@ -27,12 +27,15 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
+      - DATA_DIR=/data
+      - P2P_PORT=8333
       - INSTALL_VPN=true
+      #- CLI_ARGS="-prune=1024 -rest=0"
+    volumes:
+      - ./mounts/bitcoin:/data
     networks:
       wgnet:
         ipv4_address: 10.50.0.20
-    volumes:
-      - ./mounts/bitcoin:/data
     profiles: ["bitcoin"]
 #  lightning:
 #    build: ./services/lightning
