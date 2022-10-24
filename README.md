@@ -1,4 +1,11 @@
+```bash
+docker network create --subnet 10.66.0.0/24 wgnet
+```
+
 # VPN Server
+
+sudo nano /etc/sysctl.conf
+sudo sysctl -p
 
 Add config to `/etc/wireguard/wg0.conf`:
 
@@ -21,6 +28,5 @@ sudo apt install -y wireguard
 sudo ip link add dev wg0 type wireguard
 sudo ip address add dev wg0 10.66.0.100/24
 sudo wg setconf wg0 /etc/wireguard/wg0.conf
-ip link set up dev wg0
+sudo ip link set up dev wg0
 ```
-
