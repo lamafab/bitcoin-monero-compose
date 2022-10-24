@@ -8,7 +8,7 @@ if "${INSTALL_VPN}" == "true"; then
 	apt install -y curl iputils-ping dnsutils
 
 	ip route del default
-	ip route add default via 10.66.0.50
+	ip route add default via 10.66.0.40
 
 	echo ">> IP ROUTE:"
 	ip route show
@@ -20,7 +20,7 @@ if "${INSTALL_VPN}" == "true"; then
 	ping 1.1.1.1 -c 3
 
 	echo ">> EXTERNAL IP"
-	curl ifconfig.me
+	echo "$(curl -s ifconfig.me)"
 fi
 
 /app/bitcoin/bin/bitcoind -datadir=/data

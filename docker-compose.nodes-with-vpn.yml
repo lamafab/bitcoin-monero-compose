@@ -13,7 +13,7 @@ services:
       - TZ=Europe/London
     networks:
       default:
-        ipv4_address: 10.66.0.50
+        ipv4_address: 10.66.0.40
     volumes:
       - ./mounts/wireguard:/config
       - /lib/modules:/lib/modules
