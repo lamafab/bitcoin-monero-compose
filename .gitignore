@@ -1,1 +1,5 @@
-mounts/
+mounts/bitcoin/*
+mounts/monero/*
+mounts/lightning/*
+mounts/wireguard/*
+!mounts/wireguard/wg0.conf.template

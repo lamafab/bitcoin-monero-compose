@@ -28,7 +28,7 @@ if "${INSTALL_VPN}" == "true"; then
 	ip addr
 
 	echo -e "\n## EXTERNAL IP"
-	echo "You will connect to the network via $(curl -s ifconfig.me)"
+	echo "You will connect to the network via IP $(curl -s ifconfig.me)"
 fi
 
 echo -e "\n## About to start service ..."
