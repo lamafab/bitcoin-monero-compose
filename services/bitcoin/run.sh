@@ -5,10 +5,10 @@ if "${INSTALL_VPN}" == "true"; then
 	echo ">> VPN enabled, setting up routes..."
 	apt install -y iproute2
 	# TODO: Delete:
-	apt install -y curl iputils-ping dnsutils
+	apt install -y curl iputils-ping dnsutils python3
 
 	ip route del default
-	ip route add default via 10.66.0.40
+	ip route add default via 10.66.0.50
 
 	echo ">> IP ROUTE:"
 	ip route show
@@ -23,4 +23,5 @@ if "${INSTALL_VPN}" == "true"; then
 	echo "$(curl -s ifconfig.me)"
 fi
 
-/app/bitcoin/bin/bitcoind -datadir=/data
+#/app/bitcoin/bin/bitcoind -datadir=/data
+python3 -m http.server 8000

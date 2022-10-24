@@ -1,6 +1,6 @@
-```bash
-docker network create --subnet 10.66.0.0/24 wgnet
-```
+
+sudo iptables -A FORWARD -i ens4 -j ACCEPT
+sudo iptables -t nat -A PREROUTING -i ens4 -p tcp --dport 8000 -j DNAT --to-destination 10.66.0.2:8000
 
 # VPN Server
 
