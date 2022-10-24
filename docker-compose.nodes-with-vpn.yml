@@ -13,7 +13,7 @@ services:
       - TZ=Europe/London
     networks:
       wgnet:
-        ipv4_address: 10.66.0.40
+        ipv4_address: 10.50.0.10
     volumes:
       - ./mounts/wireguard:/config
       - /lib/modules:/lib/modules
@@ -30,7 +30,7 @@ services:
       - INSTALL_VPN=true
     networks:
       wgnet:
-        ipv4_address: 10.66.0.2
+        ipv4_address: 10.50.0.20
     volumes:
       - ./mounts/bitcoin:/data
     profiles: ["bitcoin"]
@@ -40,7 +40,7 @@ services:
 #      - wireguard
 #    networks:
 #      wgnet:
-#        ipv4_address: 10.0.0.4
+#        ipv4_address: 10.50.0.21
 #    volumes:
 #      - /data:/mounts/lightning
 #    profiles: ["lightning"]
@@ -50,7 +50,7 @@ services:
       - wireguard
     networks:
       wgnet:
-        ipv4_address: 10.66.0.4
+        ipv4_address: 10.50.0.22
     volumes:
       - ./mounts/monero:/data
     profiles: ["monero"]
@@ -60,4 +60,4 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: "10.66.0.0/24"
+        - subnet: "10.50.0.0/24"
