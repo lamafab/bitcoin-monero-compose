@@ -7,6 +7,9 @@ docker network create --subnet 10.66.0.0/24 wgnet
 sudo nano /etc/sysctl.conf
 sudo sysctl -p
 
+sudo iptables -A FORWARD -i wg0 -j ACCEPT
+sudo iptables -t nat -A POSTROUTING -o ens4 -j MASQUERADE
+
 Add config to `/etc/wireguard/wg0.conf`:
 
 ```ini
