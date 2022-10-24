@@ -8,7 +8,7 @@ if "${INSTALL_VPN}" == "true"; then
 	apt install -y curl iputils-ping dnsutils python3
 
 	ip route del default
-	ip route add default via 10.66.0.50
+	ip route add default via 10.66.0.40
 
 	echo ">> IP ROUTE:"
 	ip route show
