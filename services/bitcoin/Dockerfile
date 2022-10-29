@@ -16,7 +16,6 @@ COPY . .
 RUN curl $DL_LINK -o bitcoin.tar.gz
 RUN echo "${CHECKSUM} bitcoin.tar.gz" > checksum.txt
 RUN sha256sum -c checksum.txt
-RUN mkdir bitcoin
 RUN tar xvzf bitcoin.tar.gz -C bitcoin --strip-components=1
 
 CMD bash run.sh
