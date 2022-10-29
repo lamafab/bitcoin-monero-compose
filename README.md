@@ -40,17 +40,14 @@ change mount options, etc.
 To run the Docker Compose file:
 
 * Run a Bitcoin node only:
-	*
 	```bash
 	docker compose -f my-setup.yml --profile bitcoin up
 	```
 * Run a Monero node only:
-	*
 	```bash
 	docker compose -f my-setup.yml --profile monero up
 	```
 * Run both a Bitcoin and a Monero node:
-	*
 	```bash
 	docker compose -f my-setup.yml --profile bitcoin --profile monero up
 	```
