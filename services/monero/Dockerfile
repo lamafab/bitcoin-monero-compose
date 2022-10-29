@@ -3,6 +3,8 @@ WORKDIR /app
 
 ARG DL_LINK
 ARG CHECKSUM
+ENV INSTALL_VPN=false
+ENV GATEWAY=""
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
