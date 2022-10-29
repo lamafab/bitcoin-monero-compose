@@ -100,8 +100,8 @@ Address = 10.50.0.50/32
 [Peer]
 PublicKey = <PUBLIC-KEY>
 AllowedIPs = 0.0.0.0/0
-# VPN Endpoint IP
-Endpoint = IP-ADDRESS:51820
+# Public VPN Endpoint
+Endpoint = <IP-ADDRESS>:51820
 ```
 
 # VPN Server
