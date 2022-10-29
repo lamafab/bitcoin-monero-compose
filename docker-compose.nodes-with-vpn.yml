@@ -35,6 +35,7 @@ services:
       # `services.wireguard.networks.wgnet.ipv4_address`.
       - GATEWAY=10.50.0.10
       # ADJUST: Passed on to `bitcoind`. Adjust according to your needs.
+      # Note that `-datadir` points to the mounted volume.
       - CLI_ARGS=-datadir=/data -port=8333 -prune=1024
     volumes:
       - ./mounts/bitcoin:/data
@@ -54,6 +55,7 @@ services:
       # `services.wireguard.networks.wgnet.ipv4_address`.
       - GATEWAY=10.50.0.10
       # ADJUST: Passed on to `monerod`. Adjust according to your needs.
+      # Note that `--data-dir` points to the mounted volume.
       - CLI_ARGS=--non-interactive --data-dir=/data --p2p-bind-port=18080 --p2p-external-port=18080
     volumes:
       - ./mounts/monero:/data
