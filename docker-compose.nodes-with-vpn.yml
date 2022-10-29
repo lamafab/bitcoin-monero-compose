@@ -36,16 +36,6 @@ services:
       wgnet:
         ipv4_address: 10.50.0.20
     profiles: ["bitcoin"]
-#  lightning:
-#    build: ./services/lightning
-#    depends_on:
-#      - wireguard
-#    networks:
-#      wgnet:
-#        ipv4_address: 10.50.0.21
-#    volumes:
-#      - /data:/mounts/lightning
-#    profiles: ["lightning"]
   monero:
     build: ./services/monero
     depends_on:
