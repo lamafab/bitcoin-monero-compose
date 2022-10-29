@@ -67,8 +67,8 @@ To run the Docker Compose file:
 	docker compose -f my-setup.yml --profile bitcoin --profile monero up
 	```
 
-That's it. You might want to run this in `tmux` so you can detach and logout of
-the machine, for example. Alternatively, see [Run in background
+That's it, you're done. You might want to run this in `tmux` so you can detach
+and logout of the machine, for example. Alternatively, see [Run in background
 (systemd)](#run-in-background-systemd)
 
 ## 2. Run in background (systemd)
