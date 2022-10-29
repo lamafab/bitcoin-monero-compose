@@ -32,4 +32,4 @@ fi
 echo -e "\n## About to start service ..."
 sleep 5
 
-monero/monerod ${CLI_ARGS}
+/app/monero/monerod ${CLI_ARGS}

@@ -24,7 +24,11 @@ services:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
   bitcoin:
-    build: ./services/bitcoin
+    build:
+      context: ./services/bitcoin
+      args:
+        - DL_LINK=https://bitcoincore.org/bin/bitcoin-core-23.0/bitcoin-23.0-x86_64-linux-gnu.tar.gz
+        - CHECKSUM=2cca490c1f2842884a3c5b0606f179f9f937177da4eadd628e3f7fd7e25d26d0
     depends_on:
       - wireguard
     cap_add:
@@ -44,7 +48,11 @@ services:
         ipv4_address: 10.50.0.20
     profiles: ["bitcoin"]
   monero:
-    build: ./services/monero
+    build:
+      context: ./services/monero
+      args:
+        - DL_LINK=https://downloads.getmonero.org/cli/monero-linux-x64-v0.18.1.2.tar.bz2
+        - CHECKSUM=7d51e7072351f65d0c7909e745827cfd3b00abe5e7c4cc4c104a3c9b526da07e
     depends_on:
       - wireguard
     cap_add:
