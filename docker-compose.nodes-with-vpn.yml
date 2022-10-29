@@ -1,6 +1,8 @@
 version: "3.9"
 
 services:
+  # See here for more:
+  # https://www.linuxserver.io/blog/routing-docker-host-and-container-traffic-through-wireguard
   wireguard:
     image: lscr.io/linuxserver/wireguard:latest
     container_name: wireguard
@@ -10,6 +12,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+      # ADJUST: Your timezone. Only useful for logs, afaik.
       - TZ=Europe/London
     networks:
       wgnet:
@@ -28,7 +31,10 @@ services:
       - NET_ADMIN
     environment:
       - INSTALL_VPN=true
+      # Gateway to route traffic through. Should be equal to
+      # `services.wireguard.networks.wgnet.ipv4_address`.
       - GATEWAY=10.50.0.10
+      # ADJUST: Passed on to `bitcoind`. Adjust according to your needs.
       - CLI_ARGS=-datadir=/data -port=8333 -prune=1024
     volumes:
       - ./mounts/bitcoin:/data
@@ -44,7 +50,10 @@ services:
       - NET_ADMIN
     environment:
       - INSTALL_VPN=true
+      # Gateway to route traffic through. Should be equal to
+      # `services.wireguard.networks.wgnet.ipv4_address`.
       - GATEWAY=10.50.0.10
+      # ADJUST: Passed on to `monerod`. Adjust according to your needs.
       - CLI_ARGS=--non-interactive --data-dir=/data --p2p-bind-port=18080 --p2p-external-port=18080
     volumes:
       - ./mounts/monero:/data

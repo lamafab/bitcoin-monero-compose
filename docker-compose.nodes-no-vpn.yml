@@ -9,7 +9,7 @@ services:
       # RPC port
       #- 8332:8332
     environment:
-      # Passed on to `bitcoind`. Adjust according to your needs.
+      # ADJUST: Passed on to `bitcoind`. Adjust according to your needs.
       - CLI_ARGS=-datadir=/data -port=8333 -prune=1024
     volumes:
       - ./mounts/bitcoin:/data
@@ -22,7 +22,7 @@ services:
       # RPC port
       #- 18081:18081
     environment:
-      # Passed on to `monerod`. Adjust according to your needs.
+      # ADJUST: Passed on to `monerod`. Adjust according to your needs.
       - CLI_ARGS=--non-interactive --data-dir=/data --p2p-bind-port=18080 --p2p-external-port=18080
     volumes:
       - ./mounts/monero:/data
