@@ -120,9 +120,7 @@ change mount options, etc.
 setup that also provides the encryption keys for you. However, you will need to
 forward ports to your nodes and often the commercial service chooses the port
 numbers for you, not giving you much flexibility. As a result, you must
-configure the ports in the Docker Compose file accordingly. In case you're using
-a commercial service, continue with [Setup Nodes with VPN
-Connection](#setup-nodes-with-vpn-connection).
+configure the ports in the Docker Compose file accordingly.
 
 ### Key generation
 
@@ -189,7 +187,7 @@ $ sudo sysctl -p
 ```
 
 Then create the config file `/etc/wireguard/wg0.conf`. Depending on your
-configuration, you might need to update the internal IP addresses, ports, etc..
+configuration, you might need to update the internal IP addresses, ports, etc.
 Also, please **check the network interface**: your VPN servers network interface
 to the internet might not be called `eth0`. Adjust it accordingly by checking:
 
@@ -201,7 +199,7 @@ The configuration file:
 
 ```ini
 [Interface]
-# Make sure this matches the `Endpoint` in the clients `wg0.conf`.
+# ADJUST: Make sure this matches the `Endpoint` in the clients `wg0.conf`.
 ListenPort = 51820
 PrivateKey = <PRIVATE-KEY>
 #
@@ -230,8 +228,7 @@ PublicKey = <PUBLIC-KEY>
 AllowedIPs = 10.50.0.0/24
 ```
 
-Then add update the servers firewall rules accordingly (note that you do not
-have to do this on the client):
+Then update the servers firewall rules accordingly:
 
 ```console
 # VPN port
