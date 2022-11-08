@@ -9,12 +9,16 @@ Monero node inside a container, including - if desired - VPN configuration
 - [Docker Compose Files](#docker-compose-files)
 - [Option 1: Nodes without VPN](#option-1-nodes-without-vpn)
 	- [Configure](#configure)
+	- [Firewall Configuration](#firewall-configuration)
 	- [1. Run from CLI](#1-run-from-cli)
 	- [2. Run in background (systemd)](#2-run-in-background-systemd)
 - [Option 2: Nodes with VPN Setup](#option-2-nodes-with-vpn-setup)
+	- [Configure](#configure-1)
 	- [Setup VPN Server](#setup-vpn-server)
-	- [Setup Nodes with VPN Connection](#setup-nodes-with-vpn-connection)
-- [VPN Server](#vpn-server)
+		- [Key generation](#key-generation)
+		- [Client Configuration](#client-configuration)
+	- [Server Configuration](#server-configuration)
+	- [Execution](#execution)
 
 ![Networking VPN Diagram](./assets/networking_vpn_diagram.svg)
 
@@ -52,6 +56,19 @@ respectively. Those arguments are application specific and not documented here.
 This is the only thing you need to adjust (marked `"ADJUST"`). You're free to
 change mount options, etc.
 
+## Firewall Configuration
+
+Update the firewall rules accordingly:
+
+```console
+# VPN port
+$ sudo ufw allow in 51820
+# Bitcoin port
+$ sudo ufw allow in 8333
+# Monero port
+$ sudo ufw allow in 18080
+```
+
 ## 1. Run from CLI
 
 To run the Docker Compose file:
@@ -79,16 +96,6 @@ TODO
 
 # Option 2: Nodes with VPN Setup
 
-## Setup VPN Server
-
-**NOTE**: You can use a commercial VPN service that supports wireguard for this
-setup that also provides the encryption keys for you. However, you will need to
-forward ports to your nodes and often the commercial service chooses the port
-numbers for you, not giving you much flexibility. As a result, you must
-configure the ports in the Docker Compose file accordingly. In case you're using
-a commercial service, continue with [Setup Nodes with VPN
-Connection](#setup-nodes-with-vpn-connection).
-
 ## Configure
 
 Copy the appropriate file (`*.nodes-with-vpn.*`) and give it a name:
@@ -107,7 +114,17 @@ specify those IP addresses in the VPN server configuration).
 This is the only thing you need to adjust (marked `"ADJUST"`). You're free to
 change mount options, etc.
 
-## Key generation
+## Setup VPN Server
+
+**NOTE**: You can use a commercial VPN service that supports wireguard for this
+setup that also provides the encryption keys for you. However, you will need to
+forward ports to your nodes and often the commercial service chooses the port
+numbers for you, not giving you much flexibility. As a result, you must
+configure the ports in the Docker Compose file accordingly. In case you're using
+a commercial service, continue with [Setup Nodes with VPN
+Connection](#setup-nodes-with-vpn-connection).
+
+### Key generation
 
 You need to generate a private/public keypair for both the client and the
 server, use the `wg` CLI tool. For example:
@@ -120,9 +137,9 @@ $ echo 'YGBDCJe2FwuIE53VW7UnFKpenOnKAhhFlYm//4ufVHU=' | wg pubkey
 OyBsjeFKQASaV14UX5SZWPaH0GC7z9G89fx3pmOX1xg=
 ```
 
-(Don't use those example keys for your setup, generate your own)
+(Do not use those example keys for your setup, generate your own)
 
-## Setup Nodes with VPN Connection
+### Client Configuration
 
 Use the template file in `./mounts/wireguard/` and rename it to `wg0.conf`. The
 wireguard container will mount that volume and use that configuration.
@@ -147,7 +164,10 @@ AllowedIPs = 0.0.0.0/0
 Endpoint = <IP-ADDRESS>:51820
 ```
 
-## VPN Server
+Do note that you don't need to open any ports on your client, given that
+everything is routed through the VPN network.
+
+## Server Configuration
 
 On the VPN server, enable packet forwarding for IPv4 by opening the following
 file:
@@ -210,7 +230,8 @@ PublicKey = <PUBLIC-KEY>
 AllowedIPs = 10.50.0.0/24
 ```
 
-Then add update the servers firewall rules accordingly:
+Then add update the servers firewall rules accordingly (note that you do not
+have to do this on the client):
 
 ```console
 # VPN port
@@ -228,3 +249,7 @@ $ sudo wg-quick up wg0
 # Enable on startup:
 $ sudo systemctl enable wg-quick@wg0.service
 ```
+
+## Execution
+
+Same commands as for the [non-VPN setup](#1-run-from-cli).
