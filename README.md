@@ -42,7 +42,7 @@ other configuration files.
 Copy the appropriate file (`*.nodes-no-vpn.*`) and give it a name:
 
 ```bash
-cp docker-compose.nodes-no-vpn.yml my-setup.yml
+$ cp docker-compose.nodes-no-vpn.yml my-setup.yml
 ```
 
 Then open the file and adjust the `CLI_ARGS` environment variable according to
@@ -57,16 +57,16 @@ change mount options, etc.
 To run the Docker Compose file:
 
 * Run a Bitcoin node only:
-	```bash
-	docker compose -f my-setup.yml --profile bitcoin up
+	```console
+	$ docker compose -f my-setup.yml --profile bitcoin up
 	```
 * Run a Monero node only:
-	```bash
-	docker compose -f my-setup.yml --profile monero up
+	```console
+	$ docker compose -f my-setup.yml --profile monero up
 	```
 * Run both a Bitcoin and a Monero node:
-	```bash
-	docker compose -f my-setup.yml --profile bitcoin --profile monero up
+	```console
+	$ docker compose -f my-setup.yml --profile bitcoin --profile monero up
 	```
 
 That's it, you're done. You might want to run this in `tmux` so you can detach
@@ -81,16 +81,57 @@ TODO
 
 ## Setup VPN Server
 
-**NOTE**: You can use a commercial VPN service that supports wireguard for this setup.
-However, you will need to forward ports to your nodes and often the commercial
-service chooses the port numbers for you, not giving you much flexibility. As a
-result, you must configure the ports in the Docker Compose file accordingly. In
-case you're using a commercial service, continue with [Setup Nodes with VPN
+**NOTE**: You can use a commercial VPN service that supports wireguard for this
+setup that also provides the encryption keys for you. However, you will need to
+forward ports to your nodes and often the commercial service chooses the port
+numbers for you, not giving you much flexibility. As a result, you must
+configure the ports in the Docker Compose file accordingly. In case you're using
+a commercial service, continue with [Setup Nodes with VPN
 Connection](#setup-nodes-with-vpn-connection).
 
+## Configure
 
+Copy the appropriate file (`*.nodes-with-vpn.*`) and give it a name:
+
+```bash
+$ cp docker-compose.nodes-with-vpn.yml my-setup.yml
+```
+
+Then open the file and adjust the `CLI_ARGS` environment variable according to
+you needs. Those arguments are passed on directly to `bitcoind` and `monerdo`,
+respectively. Those arguments are application specific and not documented here.
+The networking IP assignments should work out of the box, unless you already use
+the `10.50.0.0/24` subnet for other networks. Adjust it accordingly (remember to
+specify those IP addresses in the VPN server configuration).
+
+This is the only thing you need to adjust (marked `"ADJUST"`). You're free to
+change mount options, etc.
+
+## Key generation
+
+You need to generate a private/public keypair for both the client and the
+server, use the `wg` CLI tool. For example:
+
+```console
+$ sudo apt install wireguard
+$ wg genkey
+YGBDCJe2FwuIE53VW7UnFKpenOnKAhhFlYm//4ufVHU=
+$ echo 'YGBDCJe2FwuIE53VW7UnFKpenOnKAhhFlYm//4ufVHU=' | wg pubkey
+OyBsjeFKQASaV14UX5SZWPaH0GC7z9G89fx3pmOX1xg=
+```
+
+(Don't use those example keys for your setup, generate your own)
 
 ## Setup Nodes with VPN Connection
+
+Use the template file in `./mounts/wireguard/` and rename it to `wg0.conf`. The
+wireguard container will mount that volume and use that configuration.
+
+```console
+$ cp ./mounts/wireguard/wg0.conf.template ./mounts/wireguard/wg0.conf
+```
+
+Then adjust it accordingly:
 
 ```ini
 # Client
@@ -106,46 +147,84 @@ AllowedIPs = 0.0.0.0/0
 Endpoint = <IP-ADDRESS>:51820
 ```
 
-# VPN Server
+## VPN Server
 
-sudo nano /etc/sysctl.conf
-sudo sysctl -p
+On the VPN server, enable packet forwarding for IPv4 by opening the following
+file:
 
-sudo iptables -A FORWARD -i wg0 -j ACCEPT
-sudo iptables -t nat -A POSTROUTING -o ens4 -j MASQUERADE
+```console
+$ sudo vim /etc/sysctl.conf
+```
 
-Add config to `/etc/wireguard/wg0.conf`:
+Then set the following line to `1`:
+
+```console
+net.ipv4.ip_forward=1
+```
+
+Reload values:
+
+```console
+$ sudo sysctl -p
+```
+
+Then create the config file `/etc/wireguard/wg0.conf`. Depending on your
+configuration, you might need to update the internal IP addresses, ports, etc..
+Also, please **check the network interface**: your VPN servers network interface
+to the internet might not be called `eth0`. Adjust it accordingly by checking:
+
+```console
+$ ip link
+```
+
+The configuration file:
 
 ```ini
 [Interface]
+# Make sure this matches the `Endpoint` in the clients `wg0.conf`.
 ListenPort = 51820
 PrivateKey = <PRIVATE-KEY>
 #
 # Allow forwarding from the VPN network (to the internet)
 PostUp = iptables -A FORWARD -i wg0 -j ACCEPT
 # Enable NAT/masquerading when accessing internet
-PostUp = iptables -t nat -A POSTROUTING -o ens4 -j MASQUERADE
+PostUp = iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 # Allow forwarding from the internet (to the VPN network)
-PostUp = iptables -A FORWARD -i ens4 -j ACCEPT
+PostUp = iptables -A FORWARD -i eth0 -j ACCEPT
 #
-# Forward port 8000 to client
-PostUp = iptables -t nat -A PREROUTING -i ens4 -p tcp --dport 8000 -j DNAT --to-destination 10.50.0.20:8000
+# Forward ports to clients
+# Bitcoin:
+PostUp = iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 8333 -j DNAT --to-destination 10.50.0.20:8333
+# Monero:
+PostUp = iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 18080 -j DNAT --to-destination 10.50.0.22:18080
 #
 ## DROP rules, just the reverse of the above
 PostDown = iptables -D FORWARD -i wg0 -j ACCEPT;
-PostDown = iptables -t nat -D POSTROUTING -o ens4 -j MASQUERADE
-PostDown = iptables -D FORWARD -i ens4 -j ACCEPT
-PostDown = iptables -t nat -D PREROUTING -i ens4 -p tcp --dport 8000 -j DNAT --to-destination 10.50.0.20:8000
+PostDown = iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+PostDown = iptables -D FORWARD -i eth0 -j ACCEPT
+PostDown = iptables -t nat -D PREROUTING -i eth0 -p tcp --dport 8333 -j DNAT --to-destination 10.50.0.20:8333
+PostDown = iptables -t nat -D PREROUTING -i eth0 -p tcp --dport 18080 -j DNAT --to-destination 10.50.0.22:18080
 
 [Peer]
 PublicKey = <PUBLIC-KEY>
 AllowedIPs = 10.50.0.0/24
 ```
 
-Then:
+Then add update the servers firewall rules accordingly:
+
+```console
+# VPN port
+$ sudo ufw allow in 51820
+# Bitcoin port
+$ sudo ufw allow in 8333
+# Monero port
+$ sudo ufw allow in 18080
+```
+
+Now start the wireguard VPN:
 
 ```bash
-sudo wg-quick up wg0
-# (Optional) Enable on startup:
-sudo systemctl enable wg-quick@wg0.service
+$ sudo wg-quick up wg0
+# Enable on startup:
+$ sudo systemctl enable wg-quick@wg0.service
 ```

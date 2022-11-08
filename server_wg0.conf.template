@@ -1,0 +1,28 @@
+[Interface]
+# Make sure this matches the `Endpoint` in the clients `wg0.conf`.
+ListenPort = 51820
+PrivateKey = <PRIVATE-KEY>
+#
+# Allow forwarding from the VPN network (to the internet)
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT
+# Enable NAT/masquerading when accessing internet
+PostUp = iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+# Allow forwarding from the internet (to the VPN network)
+PostUp = iptables -A FORWARD -i eth0 -j ACCEPT
+#
+# Forward ports to clients
+# Bitcoin:
+PostUp = iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 8333 -j DNAT --to-destination 10.50.0.20:8333
+# Monero:
+PostUp = iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 18080 -j DNAT --to-destination 10.50.0.22:18080
+#
+## DROP rules, just the reverse of the above
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT;
+PostDown = iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+PostDown = iptables -D FORWARD -i eth0 -j ACCEPT
+PostDown = iptables -t nat -D PREROUTING -i eth0 -p tcp --dport 8333 -j DNAT --to-destination 10.50.0.20:8333
+PostDown = iptables -t nat -D PREROUTING -i eth0 -p tcp --dport 18080 -j DNAT --to-destination 10.50.0.22:18080
+
+[Peer]
+PublicKey = <PUBLIC-KEY>
+AllowedIPs = 10.50.0.0/24

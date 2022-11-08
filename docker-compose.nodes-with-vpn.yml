@@ -16,6 +16,7 @@ services:
       - TZ=Europe/London
     networks:
       wgnet:
+        # This is the GATEWAY the other containers need to connect to.
         ipv4_address: 10.50.0.10
     volumes:
       - ./mounts/wireguard:/config

@@ -1,6 +1,6 @@
 # Client
 [Interface]
-PrivateKey = <CLIENT_SECKEY>
+PrivateKey = <PRIVATE_KEY>
 Address = 10.50.0.50/32
 
 # VPN Server
