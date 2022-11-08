@@ -14,10 +14,10 @@ Monero node inside a container, including - if desired - VPN configuration
 	- [2. Run in background (systemd)](#2-run-in-background-systemd)
 - [Option 2: Nodes with VPN Setup](#option-2-nodes-with-vpn-setup)
 	- [Configure](#configure-1)
-	- [Setup VPN Server](#setup-vpn-server)
+	- [VPN Configuration](#vpn-configuration)
 		- [Key generation](#key-generation)
 		- [Client Configuration](#client-configuration)
-	- [Server Configuration](#server-configuration)
+		- [Server Configuration](#server-configuration)
 	- [Execution](#execution)
 
 ![Networking VPN Diagram](./assets/networking_vpn_diagram.svg)
@@ -45,7 +45,7 @@ other configuration files.
 
 Copy the appropriate file (`*.nodes-no-vpn.*`) and give it a name:
 
-```bash
+```console
 $ cp docker-compose.nodes-no-vpn.yml my-setup.yml
 ```
 
@@ -61,8 +61,6 @@ change mount options, etc.
 Update the firewall rules accordingly:
 
 ```console
-# VPN port
-$ sudo ufw allow in 51820
 # Bitcoin port
 $ sudo ufw allow in 8333
 # Monero port
@@ -100,7 +98,7 @@ TODO
 
 Copy the appropriate file (`*.nodes-with-vpn.*`) and give it a name:
 
-```bash
+```console
 $ cp docker-compose.nodes-with-vpn.yml my-setup.yml
 ```
 
@@ -114,7 +112,7 @@ specify those IP addresses in the VPN server configuration).
 This is the only thing you need to adjust (marked `"ADJUST"`). You're free to
 change mount options, etc.
 
-## Setup VPN Server
+## VPN Configuration
 
 **NOTE**: You can use a commercial VPN service that supports wireguard for this
 setup that also provides the encryption keys for you. However, you will need to
@@ -162,13 +160,14 @@ AllowedIPs = 0.0.0.0/0
 Endpoint = <IP-ADDRESS>:51820
 ```
 
-Do note that you don't need to open any ports on your client, given that
-everything is routed through the VPN network.
+Note that you do not need to open any ports on your client, given that
+everything is routed through the VPN network and the client will initialize the
+VPN connection.
 
-## Server Configuration
+### Server Configuration
 
-On the VPN server, enable packet forwarding for IPv4 by opening the following
-file:
+On the remote VPN server, enable packet forwarding for IPv4 by opening the
+following file:
 
 ```console
 $ sudo vim /etc/sysctl.conf
@@ -180,16 +179,17 @@ Then set the following line to `1`:
 net.ipv4.ip_forward=1
 ```
 
-Reload values:
+Save, close and reload values:
 
 ```console
 $ sudo sysctl -p
 ```
 
-Then create the config file `/etc/wireguard/wg0.conf`. Depending on your
-configuration, you might need to update the internal IP addresses, ports, etc.
-Also, please **check the network interface**: your VPN servers network interface
-to the internet might not be called `eth0`. Adjust it accordingly by checking:
+Then create the servers config file in `/etc/wireguard/wg0.conf`. Depending on
+your configuration, you might need to update the internal IP addresses, ports,
+etc. Also, please **check the network interface**: your VPN servers network
+interface to the internet might not be called `eth0`. Adjust it accordingly by
+checking:
 
 ```console
 $ ip link
@@ -223,6 +223,7 @@ PostDown = iptables -D FORWARD -i eth0 -j ACCEPT
 PostDown = iptables -t nat -D PREROUTING -i eth0 -p tcp --dport 8333 -j DNAT --to-destination 10.50.0.20:8333
 PostDown = iptables -t nat -D PREROUTING -i eth0 -p tcp --dport 18080 -j DNAT --to-destination 10.50.0.22:18080
 
+# Client (Docker Compose)
 [Peer]
 PublicKey = <PUBLIC-KEY>
 AllowedIPs = 10.50.0.0/24
@@ -241,7 +242,7 @@ $ sudo ufw allow in 18080
 
 Now start the wireguard VPN:
 
-```bash
+```console
 $ sudo wg-quick up wg0
 # Enable on startup:
 $ sudo systemctl enable wg-quick@wg0.service
