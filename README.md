@@ -16,6 +16,8 @@ Monero node inside a container, including - if desired - VPN configuration
 	- [Setup Nodes with VPN Connection](#setup-nodes-with-vpn-connection)
 - [VPN Server](#vpn-server)
 
+![Networking VPN Diagram](./assets/networking_vpn_diagram.svg)
+
 # Requirements
 
 * Docker Compose
