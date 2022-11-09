@@ -94,7 +94,7 @@ To run the Docker Compose file:
 
 That's it, you're done. You might want to run this in `tmux` so you can detach
 and logout of the machine, for example. Alternatively, see [Run in background
-(systemd)](#run-in-background-systemd)
+(systemd)](#2-run-in-background-systemd)
 
 ### 2. Run in background (systemd)
 
