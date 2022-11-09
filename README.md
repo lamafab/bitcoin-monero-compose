@@ -1,14 +1,13 @@
 # About
 
-> NOTE: This was originally created for personal use. If something is unclear
-> please let me know.
-
-> NOTE: Lightning node support coming soon.
-
 This repository contains Docker Compose files for running a Bitcoin and/or a
 Monero node inside a container, including - if desired - VPN configuration
 (wireguard) to hide the IP address of the nodes.
 
+> NOTE: This was originally created for personal use. If something is unclear
+> please let me know.
+
+> NOTE: Lightning node support coming soon.
 
 - [About](#about)
 - [Requirements](#requirements)
@@ -16,15 +15,16 @@ Monero node inside a container, including - if desired - VPN configuration
 - [Option 1: Nodes without VPN](#option-1-nodes-without-vpn)
 	- [Configure](#configure)
 	- [Firewall Configuration](#firewall-configuration)
-	- [1. Run from CLI](#1-run-from-cli)
-	- [2. Run in background (systemd)](#2-run-in-background-systemd)
+	- [Execution](#execution)
+		- [1. Run from CLI](#1-run-from-cli)
+		- [2. Run in background (systemd)](#2-run-in-background-systemd)
 - [Option 2: Nodes with VPN Setup](#option-2-nodes-with-vpn-setup)
 	- [Configure](#configure-1)
 	- [VPN Configuration](#vpn-configuration)
 		- [Key generation](#key-generation)
 		- [Client Configuration](#client-configuration)
 		- [Server Configuration](#server-configuration)
-	- [Execution](#execution)
+	- [Execution](#execution-1)
 
 ![Networking VPN Diagram](./assets/networking_vpn_diagram.svg)
 
@@ -73,7 +73,9 @@ $ sudo ufw allow in 8333
 $ sudo ufw allow in 18080
 ```
 
-## 1. Run from CLI
+## Execution
+
+### 1. Run from CLI
 
 To run the Docker Compose file:
 
@@ -94,7 +96,7 @@ That's it, you're done. You might want to run this in `tmux` so you can detach
 and logout of the machine, for example. Alternatively, see [Run in background
 (systemd)](#run-in-background-systemd)
 
-## 2. Run in background (systemd)
+### 2. Run in background (systemd)
 
 TODO
 
@@ -256,4 +258,4 @@ $ sudo systemctl enable wg-quick@wg0.service
 
 ## Execution
 
-Same commands as for the [non-VPN setup](#1-run-from-cli).
+Same commands as for the [non-VPN setup](#execution).
