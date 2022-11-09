@@ -51,7 +51,7 @@ other configuration files.
 
 Copy the appropriate file (`*.nodes-no-vpn.*`) and give it a name:
 
-```console
+```bash
 $ cp docker-compose.nodes-no-vpn.yml my-setup.yml
 ```
 
@@ -66,7 +66,7 @@ change mount options, etc.
 
 Update the firewall rules accordingly:
 
-```console
+```bash
 # Bitcoin port
 $ sudo ufw allow in 8333
 # Monero port
@@ -80,15 +80,15 @@ $ sudo ufw allow in 18080
 To run the Docker Compose file:
 
 * Run a Bitcoin node only:
-	```console
+	```bash
 	$ docker compose -f my-setup.yml --profile bitcoin up
 	```
 * Run a Monero node only:
-	```console
+	```bash
 	$ docker compose -f my-setup.yml --profile monero up
 	```
 * Run both a Bitcoin and a Monero node:
-	```console
+	```bash
 	$ docker compose -f my-setup.yml --profile bitcoin --profile monero up
 	```
 
@@ -106,7 +106,7 @@ TODO
 
 Copy the appropriate file (`*.nodes-with-vpn.*`) and give it a name:
 
-```console
+```bash
 $ cp docker-compose.nodes-with-vpn.yml my-setup.yml
 ```
 
@@ -133,7 +133,7 @@ configure the ports in the Docker Compose file accordingly.
 You need to generate a private/public keypair for both the client and the
 server, use the `wg` CLI tool. For example:
 
-```console
+```bash
 $ sudo apt install wireguard
 $ wg genkey
 YGBDCJe2FwuIE53VW7UnFKpenOnKAhhFlYm//4ufVHU=
@@ -148,7 +148,7 @@ OyBsjeFKQASaV14UX5SZWPaH0GC7z9G89fx3pmOX1xg=
 Use the template file in `./mounts/wireguard/` and rename it to `wg0.conf`. The
 wireguard container will mount that volume and use that configuration.
 
-```console
+```bash
 $ cp ./mounts/wireguard/wg0.conf.template ./mounts/wireguard/wg0.conf
 ```
 
@@ -177,19 +177,19 @@ VPN connection.
 On the remote VPN server, enable packet forwarding for IPv4 by opening the
 following file:
 
-```console
+```bash
 $ sudo vim /etc/sysctl.conf
 ```
 
 Then set the following line to `1`:
 
-```console
+```bash
 net.ipv4.ip_forward=1
 ```
 
 Save, close and reload values:
 
-```console
+```bash
 $ sudo sysctl -p
 ```
 
@@ -199,7 +199,7 @@ etc. Also, please **check the network interface**: your VPN servers network
 interface to the internet might not be called `eth0`. Adjust it accordingly by
 checking:
 
-```console
+```bash
 $ ip link
 ```
 
@@ -239,7 +239,7 @@ AllowedIPs = 10.50.0.0/24
 
 Then update the servers firewall rules accordingly:
 
-```console
+```bash
 # VPN port
 $ sudo ufw allow in 51820
 # Bitcoin port
@@ -250,7 +250,8 @@ $ sudo ufw allow in 18080
 
 Now start the wireguard VPN:
 
-```console
+```bash
+$ sudo apt install wireguard
 $ sudo wg-quick up wg0
 # Enable on startup:
 $ sudo systemctl enable wg-quick@wg0.service
