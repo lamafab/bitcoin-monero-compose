@@ -251,7 +251,6 @@ $ sudo ufw allow in 18080
 Now start the wireguard VPN:
 
 ```bash
-$ sudo apt install wireguard
 $ sudo wg-quick up wg0
 # Enable on startup:
 $ sudo systemctl enable wg-quick@wg0.service
