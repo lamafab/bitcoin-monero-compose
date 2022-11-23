@@ -26,7 +26,7 @@ Monero node inside a container, including - if desired - VPN configuration
 		- [Server Configuration](#server-configuration)
 	- [Execution](#execution-1)
 
-![Networking VPN Diagram](./assets/networking_vpn_diagram.svg)
+![Networking VPN Diagram](./assets/networking_vpn_diagram.png)
 
 # Requirements
 
